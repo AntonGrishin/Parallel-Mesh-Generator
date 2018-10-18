@@ -34,10 +34,10 @@ int main()
 
 	// Filename of heart shell // 
 	std::string fileHeartStl;
-	fileHeartStl = "E:/Data/STL/cube3.stl"; 
+	fileHeartStl = "Ñ:/Users/Nessi/Downloads/stl/00_heart_shell.stl"; 
 	//fileHeartStl = "E:/Data/STL/CyberheartModel/00_heart_shell.stl";
 	// Folder to store mesh results //
-	std::string folderpath = "E:/Data/STL/results/";
+	std::string folderpath = "Ñ:/Users/Nessi/Downloads/stl/results/";
 
 
 	// Set mesh parameters //
@@ -281,6 +281,10 @@ int main()
 		<< " Time mesh smooth " << (float)(timeMeshSmoothEnd - timeMeshSmoothStart) / CLK_TCK << "\n";
 	fout.close();
 
+	std::cout << " Time mesh generate " << (float)(timeMeshGenEnd - timeMeshGenStart) / CLK_TCK << "\n"
+		<< " Time mesh mark " << (float)(timeMeshMarkEnd - timeMeshMarkStart) / CLK_TCK << "\n"
+		<< " Time mesh cut " << (float)(timeMeshCutEnd - timeMeshCutStart) / CLK_TCK << "\n"
+		<< " Time mesh smooth " << (float)(timeMeshSmoothEnd - timeMeshSmoothStart) / CLK_TCK << "\n";
 
 	return 0;
 }

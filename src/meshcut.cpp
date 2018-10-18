@@ -88,7 +88,7 @@ void MeshCut::deleteNonRelationPoints(
 	int newpCount = newPointsNumber;
 	float3 * newp = new float3[newpCount];
 	short* newpLabels = new short[newpCount];
-
+//Нет зависимостей ежду итерациями
 	for (int i = 0; i < pCount; i++)
 	{
 		int pos = list->at(i).y;
