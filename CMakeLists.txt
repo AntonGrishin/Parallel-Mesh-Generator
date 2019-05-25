@@ -4,31 +4,20 @@ project(PARALLEL_MESH LANGUAGES CXX CUDA)
 
 find_package(CUDA QUIET REQUIRED)
 
-set(SOURCES
-	src/grainmesh.h
-    src/grainmesh.cpp
-    src/iotetgen.h
-    src/iotetgen.cpp
-	src/mystl.h
-	src/mystl.cpp
-	src/meshoperations.h
-	src/meshoperations.cpp
-	src/meshcut.h
-	src/meshcut.cpp
-	src/meshsmooth.h
-	src/meshsmooth.cpp
-	src/mymesh.h
-	src/mymesh.cpp
-    src/common.h
-    src/common.cpp
-	src/cuda_pip.cuh
-	src/helper_math.cuh
-	src/cuda_meshgen.cuh
-	src/kernel.cu)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_executable(RJNAMM ${SOURCES})
-target_compile_features(RJNAMM PUBLIC cxx_std_11)
-set_target_properties( RJNAMM
+file(GLOB SOURCES
+        "${PROJECT_SOURCE_DIR}/include/*.h"
+        "${PROJECT_SOURCE_DIR}/include/*.cuh"
+        "${PROJECT_SOURCE_DIR}/src/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/*.cu"
+        )
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+set_target_properties( ${PROJECT_NAME}
                        PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-set_property(TARGET RJNAMM 
+set_property(TARGET ${PROJECT_NAME} 
              PROPERTY CUDA_SEPARABLE_COMPILATION ON)
