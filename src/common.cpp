@@ -1,6 +1,5 @@
 #include "common.h"
 
-int version()
-{
+int version() {
     return 1;
 }

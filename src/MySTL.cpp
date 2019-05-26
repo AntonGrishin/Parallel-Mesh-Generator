@@ -12,8 +12,7 @@
 #include <math.h>
 
 
-bool MySTL::isBinary(std::string fileName)
-{
+bool MySTL::isBinary(std::string fileName) {
     std::ifstream fin;
     fin.open(fileName);
     char str[80];
@@ -27,24 +26,21 @@ bool MySTL::isBinary(std::string fileName)
     return false;
 }
 
-int MySTL::load(std::string fileName)
-{
+int MySTL::load(std::string fileName) {
     std::ifstream ist(fileName);
 
 
     char tmpstr[100];
     int countFacet = 0;
     int countVertex = 0;
-    while (ist.good())
-    {
+    while (ist.good()) {
         ist >> tmpstr;
 
         int n = strlen(tmpstr);
         for (int i = 0; i < n; i++)
             tmpstr[i] = tolower(tmpstr[i]);
 
-        if (strcmp(tmpstr, "vertex") == 0)
-        {
+        if (strcmp(tmpstr, "vertex") == 0) {
             float x;
             float y;
             float z;
@@ -58,13 +54,11 @@ int MySTL::load(std::string fileName)
     return 0;
 }
 
-int MySTL::loadBinary(std::string fileName)
-{
+int MySTL::loadBinary(std::string fileName) {
     return 1;
 }
 
-void MySTL::saveShellInTXT(std::string filepath)
-{
+void MySTL::saveShellInTXT(std::string filepath) {
     int trigsCount = trigs.size() / 9;
     std::ofstream fout(filepath.c_str());
     fout << trigsCount << "\n";
@@ -81,8 +75,7 @@ void MySTL::saveShellInTXT(std::string filepath)
     fout.close();
 }
 
-int MySTL::readSTL(std::string fileName)
-{
+int MySTL::readSTL(std::string fileName) {
     int result = 0;
     if (isBinary(fileName))
         result = loadBinary(fileName);
@@ -93,13 +86,11 @@ int MySTL::readSTL(std::string fileName)
     return result;
 }
 
-MySTL::MySTL()
-{
+MySTL::MySTL() {
 
 }
 
 
-MySTL::~MySTL()
-{
+MySTL::~MySTL() {
 
 }

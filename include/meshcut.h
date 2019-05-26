@@ -8,32 +8,31 @@
 
 using std::set;
 
-class MeshCut 
-{
+class MeshCut {
 public:
-	std::vector<std::set<int>*>* adjenctionList = nullptr;
-	void cutMeshMarkedVertices(MyMesh * mesh);
+    std::vector<std::set<int>*>* adjenctionList = nullptr;
+    void cutMeshMarkedVertices(MyMesh * mesh);
 private:
 
-	void createRelationshipListInternal(
-		MyMesh* mesh,
-		std::vector<int2>* &vertRelations,
-		int &newPointsNumber);
+    void createRelationshipListInternal(
+        MyMesh* mesh,
+        std::vector<int2>* &vertRelations,
+        int &newPointsNumber);
 
-	void createRelationshipListSaveOneLayer(
-		MyMesh* mesh,
-		std::vector<int2>* &vertRelations,
-		int &newPointsNumber);
+    void createRelationshipListSaveOneLayer(
+        MyMesh* mesh,
+        std::vector<int2>* &vertRelations,
+        int &newPointsNumber);
 
-	void fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*> * &adjList);
+    void fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*> * &adjList);
 
 public:
-	void deleteNonRelationPoints(
-		MyMesh* mesh,
-		std::vector<int2>* list,
-		int newPointsNumber);
+    void deleteNonRelationPoints(
+        MyMesh* mesh,
+        std::vector<int2>* list,
+        int newPointsNumber);
 
-	void deleteNonRelationTetra(
-		MyMesh* mesh,
-		std::vector<int2>* list);
+    void deleteNonRelationTetra(
+        MyMesh* mesh,
+        std::vector<int2>* list);
 };

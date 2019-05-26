@@ -11,8 +11,7 @@
 
 __global__ void kernel_generate_mesh(float3 *c, int4 *tet,
     unsigned int nX, unsigned int nY, unsigned int nZ,
-    float offsetX, float offsetY, float offsetZ, float edgeLen)
-{
+    float offsetX, float offsetY, float offsetZ, float edgeLen) {
     // Optimal angle //
     float angle = 54.7356f;
 
@@ -27,10 +26,8 @@ __global__ void kernel_generate_mesh(float3 *c, int4 *tet,
     int iy = index % nY;
 
 
-    for (int ix = 0; ix < nX; ix++)
-    {
-        if ((iy < (nY)) && (iz < (nZ)))
-        {
+    for (int ix = 0; ix < nX; ix++) {
+        if ((iy < (nY)) && (iz < (nZ))) {
 
             float curX = offsetX +
                 (SQRT3 * ix * edgeLen * cosa) // distance
@@ -47,8 +44,7 @@ __global__ void kernel_generate_mesh(float3 *c, int4 *tet,
             memcpy(&c[ix + iy*nX + iz*nX*nY], &tmp, sizeof(float3));
 
 
-            if ((ix < (nX - 1)) && (iy < (nY - 1)) && (iz < (nZ - 1)))
-            {
+            if ((ix < (nX - 1)) && (iy < (nY - 1)) && (iz < (nZ - 1))) {
                 int index1 =
                     iz * nX*nY //Z loop
                     + iy * nX // Y loop 
@@ -125,8 +121,7 @@ __global__ void kernel_generate_mesh(float3 *c, int4 *tet,
 cudaError_t genMeshWithCuda(float3* &dev_points, int4* &dev_tetra,
     unsigned int nX, unsigned int nY, unsigned int nZ,
     float offsetX, float offsetY, float offsetZ,
-    float edgeLen)
-{
+    float edgeLen) {
     cudaError_t cudaStatus;
     int pSize = nX * nY * nZ;
     int tetraSize = (nX - 1)*(nY - 1)*(nZ - 1) * 6;
@@ -178,8 +173,7 @@ Error:
 }
 
 cudaError_t copyMeshFromGPU(float3* points, float3* dev_points, int pCount,
-    int4* tetra, int4* dev_tetra, int tCount)
-{
+    int4* tetra, int4* dev_tetra, int tCount) {
     cudaError_t cudaStatus;
     // Copy output vector from GPU buffer to host memory.
     cudaStatus = cudaMemcpy(points, dev_points, pCount * sizeof(float3), cudaMemcpyDeviceToHost);

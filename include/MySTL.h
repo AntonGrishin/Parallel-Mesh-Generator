@@ -18,21 +18,20 @@ typedef Point3f triangle[3];
 ///TypeDefs
 
 
-class MySTL
-{
+class MySTL {
 protected:
-	bool isBinary(std::string fileName);
-	int load(std::string fileName);
-	int loadBinary(std::string fileName);
+    bool isBinary(std::string fileName);
+    int load(std::string fileName);
+    int loadBinary(std::string fileName);
 
 public:
-	int size;
-	std::vector<float> trigs;
-	std::string myname;
-	void saveShellInTXT(std::string filepath);
+    int size;
+    std::vector<float> trigs;
+    std::string myname;
+    void saveShellInTXT(std::string filepath);
 
-	int readSTL(std::string fileName);
-	MySTL();
-	~MySTL();
+    int readSTL(std::string fileName);
+    MySTL();
+    ~MySTL();
 };
 

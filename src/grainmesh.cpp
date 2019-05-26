@@ -1,98 +1,80 @@
 #include "grainmesh.h"
 
-grain::GrainMesh::GrainMesh()
-{
+grain::GrainMesh::GrainMesh() {
 
 }
 
-grain::GrainMesh::~GrainMesh()
-{
+grain::GrainMesh::~GrainMesh() {
 
 }
 
-int grain::GrainMesh::getVerticesCount()
-{
+int grain::GrainMesh::getVerticesCount() {
     return vertices.size();
 }
 
-std::vector<vec3d>* grain::GrainMesh::getVertices()
-{
+std::vector<vec3d>* grain::GrainMesh::getVertices() {
     return &vertices;
 }
 
-std::vector<char>* grain::GrainMesh::getVerticesLabels()
-{
+std::vector<char>* grain::GrainMesh::getVerticesLabels() {
     return &verticesLabels;
 }
 
-int grain::GrainMesh::getTrianglesCount()
-{
+int grain::GrainMesh::getTrianglesCount() {
     return triangles.size();
 }
 
-std::vector<vec3i>* grain::GrainMesh::getTriangles()
-{
+std::vector<vec3i>* grain::GrainMesh::getTriangles() {
     return &triangles;
 }
 
-std::vector<char>* grain::GrainMesh::getTrianglesLabels()
-{
+std::vector<char>* grain::GrainMesh::getTrianglesLabels() {
     return &trianglesLabels;
 }
 
-int grain::GrainMesh::getTetraCount()
-{
+int grain::GrainMesh::getTetraCount() {
     return tetra.size();
 }
 
-std::vector<vec4i>* grain::GrainMesh::getTetra()
-{
+std::vector<vec4i>* grain::GrainMesh::getTetra() {
     return &tetra;
 }
 
-std::vector<char>* grain::GrainMesh::getTetraLabels()
-{
+std::vector<char>* grain::GrainMesh::getTetraLabels() {
     return &tetraLabels;
 }
 
-void grain::GrainMesh::setVertices(std::vector<vec3d> &newVertices)
-{
+void grain::GrainMesh::setVertices(std::vector<vec3d> &newVertices) {
     vertices.clear();
     vertices = newVertices;
 }
 
-void grain::GrainMesh::setVerticesLabels(std::vector<char> &newLabels)
-{
+void grain::GrainMesh::setVerticesLabels(std::vector<char> &newLabels) {
     verticesLabels.clear();
     verticesLabels = newLabels;
 }
 
-void grain::GrainMesh::setTriangles(std::vector<vec3i> &newTriangles)
-{
+void grain::GrainMesh::setTriangles(std::vector<vec3i> &newTriangles) {
     triangles.clear();
     triangles = newTriangles;
 }
 
-void grain::GrainMesh::setTrianglesLabels(std::vector<char> &newLabels)
-{
+void grain::GrainMesh::setTrianglesLabels(std::vector<char> &newLabels) {
     trianglesLabels.clear();
     trianglesLabels = newLabels;
 }
 
-void grain::GrainMesh::setTetra(std::vector<vec4i> &newTetra)
-{
+void grain::GrainMesh::setTetra(std::vector<vec4i> &newTetra) {
     tetra.clear();
     tetra = newTetra;
 }
 
-void grain::GrainMesh::setTetraLabels(std::vector<char> &newLabels)
-{
+void grain::GrainMesh::setTetraLabels(std::vector<char> &newLabels) {
     tetraLabels.clear();
     tetraLabels = newLabels;
 }
 
-void grain::GrainMesh::makeStubTetra()
-{
+void grain::GrainMesh::makeStubTetra() {
     vertices.clear();
     vertices = std::vector<vec3d>(4);
     vertices.at(0).x = 0.1; vertices.at(0).y = 0.1; vertices.at(0).z = 0.1;

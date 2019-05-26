@@ -1,16 +1,16 @@
 #include "meshsmooth.h"
 #include <fstream>
+#include "pstl/algorithm"
 #include <algorithm>
 
-float dist(float3 & a, float3 & b)
-{
+
+float dist(float3 & a, float3 & b) {
     return sqrt((a.x - b.x) * (a.x - b.x) +
         (a.y - b.y) * (a.y - b.y) +
         (a.z - b.z) * (a.z - b.z));
 }
 
-void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
-{
+void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl) {
     fillAdjunctionsList(mesh, adjenctionList);
 
     //points
@@ -29,10 +29,8 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
 
     //Теперь под вектор память будет выделена сразу и мы можем класть сразу в ячейки
 
-    for (int i = 0; i < pCount; i++)
-    {
-        if (pLabels[i] > 100)
-        {
+    for (int i = 0; i < pCount; i++) {
+        if (pLabels[i] > 100) {
             //endpoints.push_back(i);
             endpoints.at(i) = i;
         }
@@ -49,13 +47,11 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
     float3* newEndPoints = new float3[endpoints.size()];
 
 
-    for (int i = 0; i < endpoints.size(); i++)
-    {
+    for (int i = 0; i < endpoints.size(); i++) {
         float3 pp = make_float3(0.0f, 0.0f, 0.0f);
         int pNumber = endpoints.at(i);
         std::set<int>* neighbours = adjenctionList->at(pNumber);
-        for (std::set<int>::iterator it = neighbours->begin(); it != neighbours->end(); ++it)
-        {
+        for (std::set<int>::iterator it = neighbours->begin(); it != neighbours->end(); ++it) {
             int curPointNumber = *it;
             pp += p[curPointNumber];
         }
@@ -72,14 +68,12 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
     // Сделаем так же как выше, т.е. сразу выделим памяь под forDelete и проиниц -1
     forDelete.assign(endpoints.size(), -1);
 
-    for (int i = 0; i < endpoints.size(); i++)
-    {
+    for (int i = 0; i < endpoints.size(); i++) {
         int movePointNumber = endpoints[i];
         float3 oldPoint = p[movePointNumber];
         float tNearest = 100.0f;
 
-        for (int j = 0; j < stl->trigs.size(); j += 9)
-        {
+        for (int j = 0; j < stl->trigs.size(); j += 9) {
             float t = hasIntersection(
                 oldPoint,
                 make_float3(newEndPoints[i].x, newEndPoints[i].y, newEndPoints[i].z),
@@ -100,8 +94,7 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
 
         // Если точка слишком далеко от меша, то ее нужно удалить, //
         // а ее соседа изнутри надо подвинуть //
-        if (length(newPoint - p[movePointNumber]) > edgelen * 0.5)
-        {
+        if (length(newPoint - p[movePointNumber]) > edgelen * 0.5) {
             //forDelete.push_back(movePointNumber);
             //теперь можем положить на место i, все равно затем все упорядочниться, как нам
             //нужно
@@ -111,12 +104,10 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
             std::set<int>* neighbours = adjenctionList->at(movePointNumber);
             int nearestNumber = *neighbours->begin();
             float nearestDist = INFINITY;
-            for (std::set<int>::iterator it = neighbours->begin(); it != neighbours->end(); ++it)
-            {
+            for (std::set<int>::iterator it = neighbours->begin(); it != neighbours->end(); ++it) {
                 int curPointNumber = *it;
                 float dist = length(newPoint - p[curPointNumber]);
-                if (dist < nearestDist)
-                {
+                if (dist < nearestDist) {
                     nearestNumber = curPointNumber;
                     nearestDist = dist;
                 }
@@ -157,8 +148,7 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl)
     pairs->clear();
 }
 
-void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*& adjList)
-{
+void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*& adjList) {
     if (adjList == nullptr)
         adjList = new std::vector<std::set<int>*>();
 
@@ -174,8 +164,7 @@ void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*
         adjList->push_back(new std::set<int>());
 
     //можно сразу распараллеливать
-    for (int i = 0; i < vCount; i++)
-    {
+    for (int i = 0; i < vCount; i++) {
         int pNum1 = v[i].x;
         std::set<int>* tmp1 = adjList->at(pNum1);
         tmp1->insert(v[i].y);
@@ -203,13 +192,11 @@ void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*
 }
 
 //не используется в данном файле
-float3 MeshSmooth::findIntersectionWithSTL(float3 point, MySTL * stl)
-{
+float3 MeshSmooth::findIntersectionWithSTL(float3 point, MySTL * stl) {
     int stlSize = stl->trigs.size() / 9;
 
 
-    for (int i = 0; i < stlSize; i++)
-    {
+    for (int i = 0; i < stlSize; i++) {
         float3 res = getIntersectionPoint(point,
             make_float3(stl->trigs[0], stl->trigs[1], stl->trigs[2]),
             make_float3(stl->trigs[3], stl->trigs[4], stl->trigs[5]),
@@ -221,8 +208,7 @@ float3 MeshSmooth::findIntersectionWithSTL(float3 point, MySTL * stl)
     return make_float3(0.0f, 0.0f, 0.0f);
 }
 
-float3 MeshSmooth::getIntersectionPoint(float3 point, float3 p1, float3 p2, float3 p3)
-{
+float3 MeshSmooth::getIntersectionPoint(float3 point, float3 p1, float3 p2, float3 p3) {
     float3 A = p2 - p1;
     float3 B = p3 - p1;
 
@@ -265,8 +251,7 @@ float3 MeshSmooth::getIntersectionPoint(float3 point, float3 p1, float3 p2, floa
     return P;
 }
 
-inline float MeshSmooth::hasIntersection(float3 point, float3 dst, float3 p1, float3 p2, float3 p3)
-{
+inline float MeshSmooth::hasIntersection(float3 point, float3 dst, float3 p1, float3 p2, float3 p3) {
     float3 direction = normalize(dst - point);
 
     float3 A = p2 - p1;
@@ -311,12 +296,10 @@ inline float MeshSmooth::hasIntersection(float3 point, float3 dst, float3 p1, fl
     return t;
 }
 
-void MeshSmooth::deletePoints(MyMesh * mesh, std::vector<int>* deletePoints)
-{
+void MeshSmooth::deletePoints(MyMesh * mesh, std::vector<int>* deletePoints) {
 }
 
-std::vector<int2>* MeshSmooth::generateOldNewPairs(MyMesh * mesh, std::vector<int>* deleteNumbers, int & newpCount)
-{
+std::vector<int2>* MeshSmooth::generateOldNewPairs(MyMesh * mesh, std::vector<int>* deleteNumbers, int & newpCount) {
     deleteNumbers->push_back(INT_MAX);
     int oldpCount = mesh->mPointsCount;
     newpCount = 0;
@@ -329,15 +312,12 @@ std::vector<int2>* MeshSmooth::generateOldNewPairs(MyMesh * mesh, std::vector<in
     result->resize(oldpCount);
 
     //и заменим в циклах Push_back на присваивание
-    for (int i = 0; i < oldpCount; i++)
-    {
-        if (i != deleteNumbers->at(posInDeleteList))
-        {
+    for (int i = 0; i < oldpCount; i++) {
+        if (i != deleteNumbers->at(posInDeleteList)) {
             result->at(i) = (make_int2(i, newpCount));
             newpCount++;
         }
-        else
-        {
+        else {
             result->at(i) = (make_int2(i, -1));
             posInDeleteList++;
         }

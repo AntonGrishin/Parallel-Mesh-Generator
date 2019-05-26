@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include "common.h"
 
-__host__ __device__ int hasIntersection(float3 point, float3 p1, float3 p2, float3 p3)
-{
+__host__ __device__ int hasIntersection(float3 point, float3 p1, float3 p2, float3 p3) {
     float3 direction = make_float3(0.0f, 0.0f, 1.0f);
 
     float3 A = p2 - p1;
@@ -50,8 +49,7 @@ __host__ __device__ int hasIntersection(float3 point, float3 p1, float3 p2, floa
     return 1;
 }
 
-__global__ void calcPipKernel(bool * inside, float3 * points, int pCount, float3 * triangles, int tCount)
-{
+__global__ void calcPipKernel(bool * inside, float3 * points, int pCount, float3 * triangles, int tCount) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
 
     int count = 0;
@@ -71,8 +69,7 @@ __global__ void calcPipKernel(bool * inside, float3 * points, int pCount, float3
 cudaError_t calcIntersectionCuda(
     bool * inside, float3 * points, unsigned int pointsCount,
     float3 * triangles, unsigned int trianglesCount,
-    float &timeWithCopy, float &timeWithoutCopy)
-{
+    float &timeWithCopy, float &timeWithoutCopy) {
     float3 *dev_points = 0;
     float3 *dev_triags = 0;
     bool *dev_result = 0;
@@ -185,8 +182,7 @@ Error:
 cudaError_t calcIntersectionCuda2(
     bool * inside, float3 * dev_points, unsigned int pointsCount,
     float3 * triangles, unsigned int trianglesCount,
-    float &timeWithCopy, float &timeWithoutCopy)
-{
+    float &timeWithCopy, float &timeWithoutCopy) {
     float3 *dev_triags = 0;
     bool *dev_result = 0;
     cudaError_t cudaStatus;

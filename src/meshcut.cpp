@@ -1,7 +1,6 @@
 #include "meshcut.h"
 
-void MeshCut::cutMeshMarkedVertices(MyMesh* mesh)
-{
+void MeshCut::cutMeshMarkedVertices(MyMesh* mesh) {
     fillAdjunctionsList(mesh, adjenctionList);
 
     std::vector<int2>* vertRelations = new std::vector<int2>();
@@ -22,52 +21,43 @@ void MeshCut::cutMeshMarkedVertices(MyMesh* mesh)
 void MeshCut::createRelationshipListInternal(
     MyMesh* mesh,
     std::vector<int2>* &vertRelations,
-    int &newPointsNumber)
-{
+    int &newPointsNumber) {
     newPointsNumber = 0;
     int pCount = mesh->mPointsCount;
-    for (int i = 0; i < pCount; i++)
-    {
+    for (int i = 0; i < pCount; i++) {
         if (mesh->mPointLabels[i] > 100)
             vertRelations->push_back(make_int2(i, -1));
-        else
-        {
+        else {
             vertRelations->push_back(make_int2(i, newPointsNumber));
             newPointsNumber++;
         }
     }
 }
 
-void MeshCut::createRelationshipListSaveOneLayer(MyMesh * mesh, std::vector<int2>*& vertRelations, int & newPointsNumber)
-{
+void MeshCut::createRelationshipListSaveOneLayer(MyMesh * mesh, std::vector<int2>*& vertRelations, int & newPointsNumber) {
     float3* p = mesh->mPoints;
     short * pLabels = mesh->mPointLabels;
     int pCount = mesh->mPointsCount;
 
     newPointsNumber = 0;
-    for (int i = 0; i < pCount; i++)
-    {
+    for (int i = 0; i < pCount; i++) {
         /*
         ”дал€ем вершину только если она помечена и все ее соседи помечены
         */
         set<int>* tmp = adjenctionList->at(i);
         bool hasUnmarkedNeighbour = false;
-        for (std::set<int>::iterator it = tmp->begin(); it != tmp->end(); ++it)
-        {
+        for (std::set<int>::iterator it = tmp->begin(); it != tmp->end(); ++it) {
             int val = *it;
-            if (pLabels[val] == 0)
-            {
+            if (pLabels[val] == 0) {
                 hasUnmarkedNeighbour = true;
                 break;
             }
         }
 
-        if ((pLabels[i] > 100) && (hasUnmarkedNeighbour == false))
-        {
+        if ((pLabels[i] > 100) && (hasUnmarkedNeighbour == false)) {
             vertRelations->push_back(make_int2(i, -1));
         }
-        else
-        {
+        else {
             vertRelations->push_back(make_int2(i, newPointsNumber));
             newPointsNumber++;
         }
@@ -77,8 +67,7 @@ void MeshCut::createRelationshipListSaveOneLayer(MyMesh * mesh, std::vector<int2
 void MeshCut::deleteNonRelationPoints(
     MyMesh* mesh,
     std::vector<int2>* list,
-    int newPointsNumber)
-{
+    int newPointsNumber) {
     // Old points //
     float3* p = mesh->mPoints;
     short* pLabels = mesh->mPointLabels;
@@ -88,12 +77,10 @@ void MeshCut::deleteNonRelationPoints(
     int newpCount = newPointsNumber;
     float3 * newp = new float3[newpCount];
     short* newpLabels = new short[newpCount];
-    //Ќет зависимостей ежду итераци€ми
-    for (int i = 0; i < pCount; i++)
-    {
+    //Ќет зависимостей между итераци€ми
+    for (int i = 0; i < pCount; i++) {
         int pos = list->at(i).y;
-        if (pos != -1)
-        {
+        if (pos != -1) {
             memcpy(&newp[pos], &p[i], sizeof(float3));
             newpLabels[pos] = pLabels[i];
         }
@@ -108,8 +95,7 @@ void MeshCut::deleteNonRelationPoints(
 
 void MeshCut::deleteNonRelationTetra(
     MyMesh* mesh,
-    std::vector<int2>* list)
-{
+    std::vector<int2>* list) {
     // Old tetra //
     int4* t = mesh->mTetra;
     short* tLabels = mesh->mTetraLabels;
@@ -120,8 +106,7 @@ void MeshCut::deleteNonRelationTetra(
     int newtCount = 0;
 
     //Check we can delete it
-    for (int i = 0; i < tCount; i++)
-    {
+    for (int i = 0; i < tCount; i++) {
         int oldvalue, newvalue;
         bool validtetra = true;
 
@@ -170,8 +155,7 @@ void MeshCut::deleteNonRelationTetra(
     mesh->mTetraLabels = newtLabels;
 }
 
-void MeshCut::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>* &adjList)
-{
+void MeshCut::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>* &adjList) {
     if (adjList == nullptr)
         adjList = new std::vector<set<int>*>();
 
@@ -186,8 +170,7 @@ void MeshCut::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>* &a
     for (int i = 0; i < pCount; i++)
         adjList->push_back(new set<int>());
 
-    for (int i = 0; i < vCount; i++)
-    {
+    for (int i = 0; i < vCount; i++) {
         int pNum1 = v[i].x;
         set<int>* tmp1 = adjList->at(pNum1);
         tmp1->insert(v[i].y);

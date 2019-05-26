@@ -1,7 +1,6 @@
 #include "mymesh.h"
 
-MyMesh::MyMesh()
-{
+MyMesh::MyMesh() {
     mPoints = nullptr;
     mPointLabels = nullptr;
     mPointsCount = 0;

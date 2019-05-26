@@ -33,8 +33,8 @@ void convertMeshToArrays(grain::GrainMesh* mesh, float3* &vertices, std::vector<
 
 void printHelp() {
     std::cout << "You can use following flags: " << std::endl;
-    std::cout << " -nX (nY, nZ) to specify mesh size (optional, default 35) " << std::endl;
-    std::cout << " -offX (offY, offZ) to specify mesh offset (optional, default 10.5(-3, -3.5) " << std::endl;
+    std::cout << " -nX (nY, nZ) to specify mesh size (optional) " << std::endl;
+    std::cout << " -offX (offY, offZ) to specify mesh offset (optional)" << std::endl;
     std::cout << " -edgeLen to specify edge length (optional, default 0.2) " << std::endl;
     std::cout << " -generateMeshGPU to generate mesh on GPU (optional, default true) " << std::endl;
     std::cout << " -saveMeshAfterGenerate to save generated mesh (optional, default true) " << std::endl;
@@ -156,7 +156,7 @@ grainSts parseInputFlags(char* input_args[], const int& count_arg, std::map<std:
 std::string getDefault(std::string param_name) {
     std::map<std::string, std::string> default_flags = {
         {"nX", "75"}, {"nY", "75"}, {"nZ", "75"},
-        { "offX", "-18.5" }, { "offX", "-7.0" }, { "offZ", "-7.5" }, {"egdeLen", "0.2"},
+        { "offX", "0.0" }, { "offX", "0.0" }, { "offZ", "0.0" }, {"egdeLen", "3"},
         { "generateMeshGPU"," 1" },
         { "saveMeshAfterGenerate"," 1" },
         { "loadMeshBeforeMark"," 0" },
@@ -169,7 +169,7 @@ std::string getDefault(std::string param_name) {
         { "smoothMesh"," 0" },
         { "saveMeshAfterSmooth"," 0" },
         { "i"," D:\\study\\Graphics\\Parallel-Mesh-Generator\\stl\\00_heart_shell.stl" },
-        { "o"," D:\\study\\Graphics\\Parallel-Mesh-Generator\\stl\\results\\" }
+        { "o"," D:\\study\\Graphics\\node\\" }
     };
     return default_flags[param_name];
 }
@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
     }
     else if (sts == GRAIN_ERR_WRONG_PARAMETER) {
         std::cout << "Wrong parameters" << std::endl;
-        printHelp;
+        printHelp();
         return 0;
     }
 
