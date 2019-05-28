@@ -75,77 +75,78 @@ grainSts parseInputFlags(char* input_args[], const int& count_arg, std::map<std:
         return GRAIN_ERR_NONE;
     }
 
-    for (int i = 0; i < count_arg; i++) {
+    for (int i = 1; i < count_arg; i++) {
 
-        if (input_args[i] == "-h") {
+        std::string argument = input_args[i];
+        if (argument == "-h") {
             printHelp();
             return GRAIN_ERR_NONE;
         }
-        else if (input_args[i] == "-nX") {
+        else if (argument == "-nX") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-nY") {
+        else if (argument == "-nY") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-nZ") {
+        else if (argument == "-nZ") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-offX") {
+        else if (argument == "-offX") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-offY") {
+        else if (argument == "-offY") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-offZ") {
+        else if (argument == "-offZ") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
-        } else if (input_args[i] == "-edgeLen") {
-            if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
-                return GRAIN_ERR_WRONG_PARAMETER;
-        }
-        else if (input_args[i] == "-generateMeshGPU") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-saveMeshAfterGenerate") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-loadMeshBeforeMark") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-markMeshGPU") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-saveMeshAfterMark") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-loadMeshBeforeCut") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-cutMesh") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-saveMeshAfterCut") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-loadMeshBeforeSmooth") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-smoothMesh") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-saveMeshAfterSmooth") {
-            AddSimpleFlag(input_args, count_arg, i, args);
-        }
-        else if (input_args[i] == "-i") {
+        } else if (argument == "-edgeLen") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
-        else if (input_args[i] == "-o") {
+        else if (argument == "-generateMeshGPU") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-saveMeshAfterGenerate") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-loadMeshBeforeMark") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-markMeshGPU") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-saveMeshAfterMark") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-loadMeshBeforeCut") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-cutMesh") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-saveMeshAfterCut") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-loadMeshBeforeSmooth") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-smoothMesh") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-saveMeshAfterSmooth") {
+            AddSimpleFlag(input_args, count_arg, i, args);
+        }
+        else if (argument == "-i") {
+            if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
+                return GRAIN_ERR_WRONG_PARAMETER;
+        }
+        else if (argument == "-o") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
         }
@@ -160,16 +161,16 @@ std::string getDefault(std::string param_name) {
     std::map<std::string, std::string> default_flags = {
         {"nX", "200"}, {"nY", "200"}, {"nZ", "200"},
         { "offX", "-18.5" }, { "offY", "-7.0" }, { "offZ", "-7.5" }, {"edgeLen", "0.2"},
-        { "generateMeshGPU","1" },
-        { "saveMeshAfterGenerate","1" },
+        { "generateMeshGPU","0" },
+        { "saveMeshAfterGenerate","0" },
         { "loadMeshBeforeMark","0" },
-        { "markMeshGPU","1" },
+        { "markMeshGPU","0" },
         { "saveMeshAfterMark","0" },
         { "loadMeshBeforeCut","0" },
-        { "cutMesh","1" },
+        { "cutMesh","0" },
         { "saveMeshAfterCut","0" },
         { "loadMeshBeforeSmooth","0" },
-        { "smoothMesh","1" },
+        { "smoothMesh","0" },
         { "saveMeshAfterSmooth","0" },
         { "i","D:\\Study\\00_heart_shell.stl" },
         { "o","D:\\Study\\node\\" }
@@ -203,6 +204,7 @@ int main(int argc, char* argv[]) {
     std::string folderpath;
     grainSts sts;
     sts = parseInputFlags(argv, argc, flags);
+
 
     // Set mesh parameters //
     int nX, nY, nZ;
