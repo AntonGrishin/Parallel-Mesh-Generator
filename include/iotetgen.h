@@ -2,7 +2,6 @@
 #include "common.h"
 #include "grainmesh.h"
 #include "mymesh.h"
-#include <string>
 
 namespace grain {
     int readNodeFile(std::string filename, GrainMesh * mesh);
