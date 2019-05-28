@@ -1,6 +1,7 @@
 #include "meshsmooth.h"
 #include <fstream>
 #include "pstl/algorithm"
+#include "pstl/execution"
 #include <algorithm>
 
 
@@ -29,16 +30,17 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl) {
 
     //Теперь под вектор память будет выделена сразу и мы можем класть сразу в ячейки
 
-    for (int i = 0; i < pCount; i++) {
+    tbb::parallel_for(int(0), pCount, [&](int i) {
         if (pLabels[i] > 100) {
             //endpoints.push_back(i);
             endpoints.at(i) = i;
         }
-    }
+    });
+
     //erase удаляет все элементы начиная с begin до end
     //remove перемещает целевые элементы диапазоне в конец вектора
     endpoints.erase(
-        std::remove(endpoints.begin(), endpoints.end(), -1),
+        std::remove(pstl::execution::par_unseq,endpoints.begin(), endpoints.end(), -1),
         endpoints.end());
     //В итоге мы получим тот же вектор, что был до этого, но
     //сможем эффективнее распаралелить код, т.к. между итерациями теперь не зависимостей.
@@ -68,11 +70,10 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl) {
     // Сделаем так же как выше, т.е. сразу выделим памяь под forDelete и проиниц -1
     forDelete.assign(endpoints.size(), -1);
 
-    for (int i = 0; i < endpoints.size(); i++) {
+    tbb::parallel_for(size_t(0), endpoints.size(), [&](size_t i) {
         int movePointNumber = endpoints[i];
         float3 oldPoint = p[movePointNumber];
         float tNearest = 100.0f;
-
         for (int j = 0; j < stl->trigs.size(); j += 9) {
             float t = hasIntersection(
                 oldPoint,
@@ -118,11 +119,11 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl) {
 
         }
         p[movePointNumber] = newPoint;
-    }
+    });
 
     //удалим лишнее из for delete;
     forDelete.erase(
-        std::remove(forDelete.begin(), forDelete.end(), -1),
+        std::remove(pstl::execution::par_unseq, forDelete.begin(), forDelete.end(), -1),
         forDelete.end());
     //теперь цикл выше не зависит от итераций
     // Generate relations list //
@@ -148,13 +149,13 @@ void MeshSmooth::smoothMesh(MyMesh * mesh, MySTL * stl) {
     pairs->clear();
 }
 
-void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*& adjList) {
+void MeshSmooth::fillAdjunctionsList(MyMesh* mesh, std::vector<std::set<int>*>*& adjList) {
     if (adjList == nullptr)
         adjList = new std::vector<std::set<int>*>();
 
     //points
     float3* p = mesh->mPoints;
-    short * pLabels = mesh->mPointLabels;
+    short* pLabels = mesh->mPointLabels;
     int pCount = mesh->mPointsCount;
     //tetras
     int4* v = mesh->mTetra;
@@ -164,7 +165,7 @@ void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*
         adjList->push_back(new std::set<int>());
 
     //можно сразу распараллеливать
-    for (int i = 0; i < vCount; i++) {
+    tbb::parallel_for(int(0), vCount, [&](int i) {
         int pNum1 = v[i].x;
         std::set<int>* tmp1 = adjList->at(pNum1);
         tmp1->insert(v[i].y);
@@ -188,7 +189,7 @@ void MeshSmooth::fillAdjunctionsList(MyMesh * mesh, std::vector<std::set<int>*>*
         tmp4->insert(v[i].x);
         tmp4->insert(v[i].y);
         tmp4->insert(v[i].z);
-    }
+    });
 }
 
 //не используется в данном файле
@@ -312,7 +313,7 @@ std::vector<int2>* MeshSmooth::generateOldNewPairs(MyMesh * mesh, std::vector<in
     result->resize(oldpCount);
 
     //и заменим в циклах Push_back на присваивание
-    for (int i = 0; i < oldpCount; i++) {
+    tbb::parallel_for(int(0), oldpCount, [&](int i) {
         if (i != deleteNumbers->at(posInDeleteList)) {
             result->at(i) = (make_int2(i, newpCount));
             newpCount++;
@@ -321,7 +322,7 @@ std::vector<int2>* MeshSmooth::generateOldNewPairs(MyMesh * mesh, std::vector<in
             result->at(i) = (make_int2(i, -1));
             posInDeleteList++;
         }
-    }
+    });
 
     return result;
 }
