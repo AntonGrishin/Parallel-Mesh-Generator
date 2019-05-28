@@ -104,6 +104,9 @@ grainSts parseInputFlags(char* input_args[], const int& count_arg, std::map<std:
         else if (input_args[i] == "-offZ") {
             if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
                 return GRAIN_ERR_WRONG_PARAMETER;
+        } else if (input_args[i] == "-edgeLen") {
+            if (ValidateAndAddtoMap(input_args, count_arg, i, args) == GRAIN_ERR_WRONG_PARAMETER)
+                return GRAIN_ERR_WRONG_PARAMETER;
         }
         else if (input_args[i] == "-generateMeshGPU") {
             AddSimpleFlag(input_args, count_arg, i, args);
@@ -155,21 +158,21 @@ grainSts parseInputFlags(char* input_args[], const int& count_arg, std::map<std:
 
 std::string getDefault(std::string param_name) {
     std::map<std::string, std::string> default_flags = {
-        {"nX", "75"}, {"nY", "75"}, {"nZ", "75"},
-        { "offX", "0.0" }, { "offX", "0.0" }, { "offZ", "0.0" }, {"egdeLen", "3"},
-        { "generateMeshGPU"," 1" },
-        { "saveMeshAfterGenerate"," 1" },
-        { "loadMeshBeforeMark"," 0" },
-        { "markMeshGPU"," 0" },
-        { "saveMeshAfterMark"," 0" },
-        { "loadMeshBeforeCut"," 0" },
-        { "cutMesh"," 0" },
-        { "saveMeshAfterCut"," 0" },
-        { "loadMeshBeforeSmooth"," 0" },
-        { "smoothMesh"," 0" },
-        { "saveMeshAfterSmooth"," 0" },
-        { "i"," D:\\study\\Graphics\\Parallel-Mesh-Generator\\stl\\00_heart_shell.stl" },
-        { "o"," D:\\study\\Graphics\\node\\" }
+        {"nX", "200"}, {"nY", "200"}, {"nZ", "200"},
+        { "offX", "-18.5" }, { "offY", "-7.0" }, { "offZ", "-7.5" }, {"edgeLen", "0.2"},
+        { "generateMeshGPU","1" },
+        { "saveMeshAfterGenerate","1" },
+        { "loadMeshBeforeMark","0" },
+        { "markMeshGPU","1" },
+        { "saveMeshAfterMark","0" },
+        { "loadMeshBeforeCut","0" },
+        { "cutMesh","1" },
+        { "saveMeshAfterCut","0" },
+        { "loadMeshBeforeSmooth","0" },
+        { "smoothMesh","1" },
+        { "saveMeshAfterSmooth","0" },
+        { "i","D:\\Study\\00_heart_shell.stl" },
+        { "o","D:\\Study\\node\\" }
     };
     return default_flags[param_name];
 }
@@ -313,6 +316,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (loadMeshBeforeMark) {
+        std::cout << "Mesh loading..." << std::endl;
         grain::readNodeFile(folderpath + "torscoloredremoved.node", &mymesh);
         //grain::readEleFile(folderpath + "torscoloredremoved.ele", &mymesh);
 
@@ -349,6 +353,7 @@ int main(int argc, char* argv[]) {
 
     // Mark labels with CUDA // 
     if (markMeshGPU) {
+        std::cout << "Marking..." << std::endl;
         float timeWithCopy, timeWithoutCopy;
         float3* mystl = new float3[stl.trigs.size() / 3];
         for (uint i = 0; i < stl.trigs.size() / 3; i++) {
@@ -395,6 +400,7 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < tCount; i++)
             tLabels[i] = 0;
         mymesh.mTetraLabels = tLabels;
+        std::cout << "Marking finished successful!" << std::endl;
     }
 
     // Save mesh after mark // 
@@ -411,10 +417,12 @@ int main(int argc, char* argv[]) {
 
     // Mesh cutting //
     if (cutMesh) {
+        std::cout << "Cutting..." << std::endl;
         timeMeshCutStart = clock();
         MeshCut cut;
         cut.cutMeshMarkedVertices(&mymesh);
         timeMeshCutEnd = clock();
+        std::cout << "Cut finished successful!" << std::endl;
     }
 
     // Save mesh before cut //
@@ -431,11 +439,13 @@ int main(int argc, char* argv[]) {
 
     // Smoothing //
     if (smoothMesh) {
+        std::cout << "Smoothing..." << std::endl;
         timeMeshSmoothStart = clock();
         MeshSmooth smooth;
         smooth.edgelen = edgeLen;
         smooth.smoothMesh(&mymesh, &stl);
         timeMeshSmoothEnd = clock();
+        std::cout << "Smoothing finished successful!" << std::endl;
     }
 
     // Save smooth after smooth //
